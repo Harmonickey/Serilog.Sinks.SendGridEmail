@@ -1,14 +1,16 @@
 # Serilog SendGrid Email Sink
 
-## Create an Instance of the SendGridClient from the SendGrid NuGet Package
-
+## Download the SendGrid NuGet Package and the SendGridEmail NuGet Package
 ```csharp
-
-var client = new SendGridClient("Your Send Grid API Key");
-
+Install-Package Serilog.Sinks.SendGridEmail -Version 1.0.0 
 ```
 
-## Create an EmailConnectionInfo from the SendGridEmail NuGet Package
+## Create an Instance of the SendGridClient (SendGrid namespace)
+```csharp
+var client = new SendGridClient("Your Send Grid API Key");
+```
+
+## Create an EmailConnectionInfo (Serilog.Sinks.SendGridEmail namespace)
 ```csharp
 var emailConnectionInfo = new EmailConnectionInfo
 {
@@ -26,8 +28,6 @@ Log.Logger = new LoggerConfiguration()
 	.MinimumLevel.Is(LogEventLevel.Debug)
 	.Enrich.WithProcessId()
 	.Enrich.WithThreadId()
-	.WriteTo.EventLog("Ayni.Web", "AyniEnterprise", Environment.MachineName, true)
 	.WriteTo.Email(emailConnectionInfo, restrictedToMinimumLevel: LogEventLevel.Error)
 	.CreateLogger();
-
 ```
