@@ -1,8 +1,33 @@
-# Hermes
+# Serilog SendGrid Email Sink
 
-Master Branch Build Status
-[![Build status](https://ci.appveyor.com/api/projects/status/r0iywb6q5gtwehqr/branch/master?svg=true)](https://ci.appveyor.com/project/Harmonickey/hermes/branch/master)
+## Create an Instance of the SendGridClient from the SendGrid NuGet Package
 
-Dev Branch Build Status
-[![Build status](https://ci.appveyor.com/api/projects/status/r0iywb6q5gtwehqr/branch/dev?svg=true)](https://ci.appveyor.com/project/Harmonickey/hermes/branch/dev)
+```csharp
 
+var client = new SendGridClient("Your Send Grid API Key");
+
+```
+
+## Create an EmailConnectionInfo from the SendGridEmail NuGet Package
+```csharp
+var emailConnectionInfo = new EmailConnectionInfo
+{
+	EmailSubject = "Application Error",
+	FromEmail = "Your From Email",
+	ToEmail = "Your To Email",
+	SendGridClient = client,
+	FromName = "Your Friendly From Name"
+};
+```
+
+## Create your own customized Serilog logger, and then include the .WriteTo.Email extension, just like with the Serilog.Sinks.Email NuGet package.
+```csharp
+Log.Logger = new LoggerConfiguration()
+	.MinimumLevel.Is(LogEventLevel.Debug)
+	.Enrich.WithProcessId()
+	.Enrich.WithThreadId()
+	.WriteTo.EventLog("Ayni.Web", "AyniEnterprise", Environment.MachineName, true)
+	.WriteTo.Email(emailConnectionInfo, restrictedToMinimumLevel: LogEventLevel.Error)
+	.CreateLogger();
+
+```
