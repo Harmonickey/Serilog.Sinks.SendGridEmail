@@ -10,7 +10,7 @@ Install-Package Serilog.Sinks.SendGridEmail -Version 1.0.0
 var client = new SendGridClient("Your Send Grid API Key");
 ```
 
-## Create an EmailConnectionInfo (Serilog.Sinks.SendGridEmail namespace)
+## Create an EmailConnectionInfo (Serilog.Sinks.Email namespace)
 ```csharp
 var emailConnectionInfo = new EmailConnectionInfo
 {

@@ -2,7 +2,7 @@
 using Serilog.Configuration;
 using Serilog.Events;
 using Serilog.Formatting.Display;
-using Serilog.Sinks.SendGridEmail;
+using Serilog.Sinks.Email;
 
 namespace Serilog
 {

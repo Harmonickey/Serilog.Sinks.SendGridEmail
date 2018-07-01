@@ -16,7 +16,7 @@ using System.ComponentModel;
 using System.Net;
 using SendGrid;
 
-namespace Serilog.Sinks.SendGridEmail
+namespace Serilog.Sinks.Email
 {
     /// <summary>
     /// Connection information for use by the Email sink.

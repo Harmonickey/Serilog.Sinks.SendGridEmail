@@ -9,7 +9,7 @@ using SendGrid.Helpers.Mail;
 using Serilog.Events;
 using Serilog.Formatting;
 
-namespace Serilog.Sinks.SendGridEmail
+namespace Serilog.Sinks.Email
 {
 	public class SendGridEmailSink : PeriodicBatchingSink
 	{
