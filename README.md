@@ -2,7 +2,7 @@
 
 ## Download the SendGrid NuGet Package and the SendGridEmail NuGet Package
 ```csharp
-Install-Package Serilog.Sinks.SendGridEmail -Version 1.0.0 
+Install-Package Serilog.Sinks.SendGridEmail
 ```
 
 ## Create an Instance of the SendGridClient (SendGrid namespace)
