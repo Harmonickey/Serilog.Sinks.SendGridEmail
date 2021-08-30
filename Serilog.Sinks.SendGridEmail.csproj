@@ -2,12 +2,15 @@
 
   <PropertyGroup>
       <TargetFrameworks>netstandard2.0;net452;net462</TargetFrameworks>
-      <PackageVersion>2.0.1</PackageVersion>
+      <PackageVersion>2.0.2</PackageVersion>
+      <AssemblyVersion>2.0.2.0</AssemblyVersion>
+      <Version>2.0.2</Version>
       <Authors>Harmonickey</Authors>
       <Title>Serilog.Sinks.SendGridEmail</Title>
       <Description>Serilog SendGrid Email Sink</Description>
       <PackageProjectUrl>https://github.com/Harmonickey/Serilog.Sinks.SendGridEmail</PackageProjectUrl>
       <RepositoryUrl>https://github.com/Harmonickey/Serilog.Sinks.SendGridEmail</RepositoryUrl>
+      <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
