@@ -3,12 +3,15 @@ using Serilog.Configuration;
 using Serilog.Events;
 using Serilog.Formatting.Display;
 using Serilog.Sinks.Email;
+using Serilog.Sinks.PeriodicBatching;
 
 namespace Serilog
 {
     public static class LoggerConfigurationEmailExtensions
     {
 	    const string DefaultOutputTemplate = "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level}] {Message}{NewLine}{Exception}";
+        const int DefaultBatchPostingLimit = 100;
+        static readonly TimeSpan DefaultPeriod = TimeSpan.FromSeconds(30);
 
 		/// <summary>
 		/// Adds a sink that sends log events via email.
@@ -29,8 +32,8 @@ namespace Serilog
 		    EmailConnectionInfo connectionInfo,
 		    string outputTemplate = DefaultOutputTemplate,
 		    LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum,
-		    int batchPostingLimit = SendGridEmailSink.DefaultBatchPostingLimit,
-		    TimeSpan? period = null,
+			int batchPostingLimit = DefaultBatchPostingLimit,
+			TimeSpan? period = null,
 		    IFormatProvider formatProvider = null,
 		    string mailSubject = EmailConnectionInfo.DefaultSubject)
 	    {
@@ -41,13 +44,20 @@ namespace Serilog
 			    mailSubject = connectionInfo.EmailSubject;
 		    }
 
-		    var defaultedPeriod = period ?? SendGridEmailSink.DefaultPeriod;
-		    var formatter = new MessageTemplateTextFormatter(outputTemplate, formatProvider);
+            var batchingPeriod = period ?? DefaultPeriod;
+            var formatter = new MessageTemplateTextFormatter(outputTemplate, formatProvider);
 		    var subjectLineFormatter = new MessageTemplateTextFormatter(mailSubject, formatProvider);
 
-		    return loggerConfiguration.Sink(
-			    new SendGridEmailSink(connectionInfo, batchPostingLimit, defaultedPeriod, formatter, subjectLineFormatter),
-			    restrictedToMinimumLevel);
+            var batchingOptions = new PeriodicBatchingSinkOptions
+            {
+                BatchSizeLimit = batchPostingLimit,
+                Period = batchingPeriod,
+                EagerlyEmitFirstEvent = false,  // set default to false, not usable for emailing
+                QueueLimit = 10000
+            };
+            var batchingSink = new PeriodicBatchingSink(new SendGridEmailSink(connectionInfo, formatter, subjectLineFormatter), batchingOptions);
+
+			return loggerConfiguration.Sink(batchingSink, restrictedToMinimumLevel);
 	    }
 	}
 }
