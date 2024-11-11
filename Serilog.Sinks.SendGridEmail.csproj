@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-      <TargetFrameworks>net47;netstandard2.0;netstandard2.1</TargetFrameworks>
-      <PackageVersion>2.1.0</PackageVersion>
-      <AssemblyVersion>2.1.0.0</AssemblyVersion>
-      <Version>2.1.0</Version>
+      <TargetFrameworks>net45;net47;netstandard2.0;netstandard2.1</TargetFrameworks>
+      <PackageVersion>3.1.0</PackageVersion>
+      <AssemblyVersion>3.1.0.0</AssemblyVersion>
+      <Version>3.1.0</Version>
       <Authors>Harmonickey</Authors>
       <Title>Serilog.Sinks.SendGridEmail</Title>
       <Description>Serilog SendGrid Email Sink</Description>
