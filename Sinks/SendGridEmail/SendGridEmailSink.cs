@@ -60,7 +60,7 @@ namespace Serilog.Sinks.Email
 
             var from = new EmailAddress(_connectionInfo.FromEmail, _connectionInfo.FromName);
             var to = new EmailAddress(_connectionInfo.ToEmail);
-            var msg = MailHelper.CreateSingleEmail(from, to, _connectionInfo.EmailSubject, payload.ToString(), payload.ToString());
+			var msg = MailHelper.CreateSingleEmail(from, to, _connectionInfo.EmailSubject, payload.ToString(), _connectionInfo.IsBodyHtml ? payload.ToString() : string.Empty);
 
             await _client.SendEmailAsync(msg);
 		}
