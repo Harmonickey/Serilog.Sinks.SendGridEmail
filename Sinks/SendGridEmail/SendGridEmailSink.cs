@@ -59,8 +59,17 @@ namespace Serilog.Sinks.Email
             _subjectLineFormatter.Format(eventsSet.OrderByDescending(e => e.Level).First(), subject);
 
             var from = new EmailAddress(_connectionInfo.FromEmail, _connectionInfo.FromName);
-            var to = new EmailAddress(_connectionInfo.ToEmail);
-			var msg = MailHelper.CreateSingleEmail(from, to, _connectionInfo.EmailSubject, payload.ToString(), _connectionInfo.IsBodyHtml ? payload.ToString() : string.Empty);
+
+            char[] delimiters = new[] { ',', ';', ' ' };
+            var splitEmails = _connectionInfo.ToEmail.Trim().ToLower().Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
+
+            var to = new List<EmailAddress> { };
+            foreach (var splitEmail in splitEmails)
+            {
+                to.Add(new EmailAddress(splitEmail));
+            }
+
+            var msg = MailHelper.CreateSingleEmailToMultipleRecipients(from, to, _connectionInfo.EmailSubject, payload.ToString(), _connectionInfo.IsBodyHtml ? payload.ToString() : string.Empty);
 
             await _client.SendEmailAsync(msg);
 		}
