@@ -61,7 +61,7 @@ namespace Serilog.Sinks.Email
             var from = new EmailAddress(_connectionInfo.FromEmail, _connectionInfo.FromName);
 
             char[] delimiters = new[] { ',', ';', ' ' };
-            var splitEmails = _connectionInfo.ToEmail.Trim().ToLower().Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
+            var splitEmails = _connectionInfo.ToEmail.Trim().Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
 
             var to = new List<EmailAddress> { };
             foreach (var splitEmail in splitEmails)
