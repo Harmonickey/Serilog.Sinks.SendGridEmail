@@ -31,3 +31,7 @@ Log.Logger = new LoggerConfiguration()
 	.WriteTo.Email(emailConnectionInfo, restrictedToMinimumLevel: LogEventLevel.Error)
 	.CreateLogger();
 ```
+
+## Push Version
+
+```git tag v1.2.0 && git push origin v1.2.0```
