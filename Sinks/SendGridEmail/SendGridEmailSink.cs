@@ -71,7 +71,7 @@ namespace Serilog.Sinks.Email
                 to.Add(new EmailAddress(splitEmail));
             }
 
-            var msg = MailHelper.CreateSingleEmailToMultipleRecipients(from, to, _connectionInfo.EmailSubject, payload.ToString(), _connectionInfo.IsBodyHtml ? payload.ToString() : string.Empty);
+            var msg = MailHelper.CreateSingleEmailToMultipleRecipients(from, to, subject.ToString(), payload.ToString(), _connectionInfo.IsBodyHtml ? payload.ToString() : string.Empty);
 
             var response = await _client.SendEmailAsync(msg).ConfigureAwait(false);
             using (response.Body)
