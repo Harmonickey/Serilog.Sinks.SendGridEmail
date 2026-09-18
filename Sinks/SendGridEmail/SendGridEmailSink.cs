@@ -3,9 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using SendGrid;
 using SendGrid.Helpers.Mail;
+using Serilog.Debugging;
 using Serilog.Events;
 using Serilog.Formatting;
 
@@ -71,7 +73,25 @@ namespace Serilog.Sinks.Email
 
             var msg = MailHelper.CreateSingleEmailToMultipleRecipients(from, to, _connectionInfo.EmailSubject, payload.ToString(), _connectionInfo.IsBodyHtml ? payload.ToString() : string.Empty);
 
-            await _client.SendEmailAsync(msg);
+            var response = await _client.SendEmailAsync(msg).ConfigureAwait(false);
+            using (response.Body)
+            {
+                var statusCode = (int)response.StatusCode;
+                if (statusCode >= 200 && statusCode < 300)
+                    return;
+
+                var error = string.Format("SendGrid email request failed with HTTP {0} ({1}).",
+                    statusCode, response.StatusCode);
+
+                // PeriodicBatching logs exceptions and retains failed batches for retry.
+                if (statusCode == 408 || statusCode == 429 || (statusCode >= 500 && statusCode < 600))
+                    throw new HttpRequestException(error + " The batch will be retried by PeriodicBatching.");
+
+                // Retrying the same invalid request cannot repair it.
+                // Report the loss and let batching move on, rather than blocking later events behind this batch.
+                SelfLog.WriteLine("{0} Dropping batch of {1} event(s) without retry because the response is non-retryable.",
+                    error, eventsSet.Count);
+            }
 		}
 
         public Task OnEmptyBatchAsync()
